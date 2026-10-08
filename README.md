@@ -28,6 +28,8 @@ Copy `adapter.py` to the same directory as your `docker-compose.yml` (e.g. `/opt
     volumes:
       - ./adapter.py:/app/adapter.py:ro
     command: ["python3", "/app/adapter.py"]
+    ports:
+      - "8091:8091"
     networks:
       - termix-net
 ```
@@ -42,13 +44,13 @@ docker run -d --name hs2ts-adapter -p 8091:8091 hs2ts-adapter
 
 ## Configure Termix
 In Termix → Tailscale plugin settings:
-- `apiBaseUrl`: `http://<termix-host>:8091` (e.g. `http://10.10.0.21:8091` on the same host; if Termix runs in Docker on same stack, you can also use `http://hs2ts-adapter:8091` internally)
+- `apiBaseUrl`: `http://<termix-host>:8091` (or `http://hs2ts-adapter:8091` if on the same Docker network)
 - `apiKey`: your Headscale API key (use the full key; do **not** truncate)
 
 Note: The adapter forwards the Bearer token to Headscale as-is (`Authorization: Bearer <key>`).
 
 ## Configuration via environment
-- `HEADSCALE_API` (default: `https://hs.aldervall.se/api/v1/node`) – Headscale `/api/v1/node` endpoint
+- `HEADSCALE_API` (default: `https://<your-headscale>/api/v1/node`) – Headscale `/api/v1/node` endpoint
 - `LISTEN_HOST` (default: `0.0.0.0`)
 - `LISTEN_PORT` (default: `8091`)
 
