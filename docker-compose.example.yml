@@ -1,0 +1,18 @@
+services:
+  hs2ts-adapter:
+    build: .
+    container_name: hs2ts-adapter
+    restart: unless-stopped
+    environment:
+      # Override if needed
+      # HEADSCALE_API: https://hs.yourdomain.com/api/v1/node
+      # LISTEN_HOST: 0.0.0.0
+      # LISTEN_PORT: 8091
+    ports:
+      - "8091:8091"  # optional; not needed if other containers reach it internally
+    networks:
+      - termix-net
+
+networks:
+  termix-net:
+    driver: bridge
