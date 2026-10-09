@@ -6,7 +6,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
-HEADSCALE_API = os.environ.get('HEADSCALE_API', 'https://hs.aldervall.se/api/v1/node')
+HEADSCALE_API = os.environ.get('HEADSCALE_API', '').strip()
 LISTEN_HOST = os.environ.get('LISTEN_HOST', '0.0.0.0')
 LISTEN_PORT = int(os.environ.get('LISTEN_PORT', '8091'))
 
@@ -33,6 +33,9 @@ class Handler(BaseHTTPRequestHandler):
         token = auth.split(' ', 1)[1].strip()
         if not token:
             self._send_json(401, {'error': 'empty token'})
+            return
+        if not HEADSCALE_API:
+            self._send_json(500, {'error': 'not_configured', 'detail': 'set HEADSCALE_API to your Headscale nodes endpoint, e.g. https://headscale.example.com/api/v1/node'})
             return
         req = Request(HEADSCALE_API, headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json', 'User-Agent': 'hs2ts-adapter/1.0'})
         try:

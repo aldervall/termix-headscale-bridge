@@ -4,8 +4,9 @@ services:
     container_name: hs2ts-adapter
     restart: unless-stopped
     environment:
-      # Override if needed
-      # HEADSCALE_API: https://hs.yourdomain.com/api/v1/node
+      # Required: full URL to your Headscale nodes endpoint
+      HEADSCALE_API: https://<your-headscale>/api/v1/node
+      # Optional overrides
       # LISTEN_HOST: 0.0.0.0
       # LISTEN_PORT: 8091
     ports:
